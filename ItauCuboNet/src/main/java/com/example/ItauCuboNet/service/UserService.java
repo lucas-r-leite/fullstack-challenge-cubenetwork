@@ -18,7 +18,11 @@ public class UserService {
     private UserRepository userRepository;
 
     @Transactional
-    public User save(User user) {
+    public User save(User user) throws Exception {
+        float totalParticipation = getTotalParticipation() + user.getParticipation();
+        if (totalParticipation > 100) {
+            throw new Exception("Total participation cannot exceed 100. Current total: " + getTotalParticipation());
+        }
         return userRepository.save(user);
     }
 
@@ -26,20 +30,30 @@ public class UserService {
         return new UserDTO(user.getId(), user.getName(), user.getParticipation());
     }
 
-
     public List<UserDTO> findAll() {
         return userRepository.findAll().stream()
                               .map(this::convertToDTO)
                               .toList();
     }
 
-    public User updateUser(User updatedUser) {
-        return userRepository.findByName(updatedUser.getName())
-                             .map(existingUser -> {
-                                 existingUser.setName(updatedUser.getName());
-                                 existingUser.setParticipation(updatedUser.getParticipation());
-                                 return userRepository.save(existingUser);
-                             })
-                             .orElse(null);
+    public User updateUser(User updatedUser) throws Exception {
+        User existingUser = userRepository.findByName(updatedUser.getName())
+                                          .orElseThrow(() -> new Exception("User not found"));
+
+        float totalParticipation = getTotalParticipation() - existingUser.getParticipation() + updatedUser.getParticipation();
+        if (totalParticipation > 100) {
+            throw new Exception("Total participation cannot exceed 100. Current total: " + getTotalParticipation());
+        }
+
+        existingUser.setName(updatedUser.getName());
+        existingUser.setParticipation(updatedUser.getParticipation());
+
+        return userRepository.save(existingUser);
+    }
+
+    private float getTotalParticipation() {
+        return userRepository.findAll().stream()
+                              .map(User::getParticipation)
+                              .reduce(0f, Float::sum);
     }
 }

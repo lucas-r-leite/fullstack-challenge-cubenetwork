@@ -33,8 +33,12 @@ public class UserController {
             return ResponseEntity.status(400).body("User with the same name already exists");
         }
 
-        User savedUser = userService.save(body);
-        return new ResponseEntity<>(savedUser, HttpStatusCode.valueOf(201));
+        try {
+            User savedUser = userService.save(body);
+            return new ResponseEntity<>(savedUser, HttpStatusCode.valueOf(201));
+        } catch (Exception e) {
+            return ResponseEntity.status(400).body(e.getMessage());
+        }
     }
 
     @GetMapping("/all")
@@ -45,11 +49,11 @@ public class UserController {
 
     @PutMapping("/update")
     public ResponseEntity<?> updateUser(@RequestBody User updatedUser) {
-        User updated = userService.updateUser(updatedUser);
-        if (updated != null) {
+        try {
+            User updated = userService.updateUser(updatedUser);
             return new ResponseEntity<>(updated, org.springframework.http.HttpStatus.OK);
-        } else {
-            return ResponseEntity.status(404).body("User not found");
+        } catch (Exception e) {
+            return ResponseEntity.status(404).body(e.getMessage());
         }
     }
 }
