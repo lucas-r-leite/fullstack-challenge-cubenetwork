@@ -1,6 +1,7 @@
 package com.example.ItauCuboNet.service;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -55,5 +56,13 @@ public class UserService {
         return userRepository.findAll().stream()
                               .map(User::getParticipation)
                               .reduce(0f, Float::sum);
+    }
+    public void deleteUser(Long id) throws Exception {
+        Optional<User> user = userRepository.findById(id);
+        if (user.isPresent()) {
+            userRepository.delete(user.get());
+        } else {
+            throw new Exception("User not found");
+        }
     }
 }
