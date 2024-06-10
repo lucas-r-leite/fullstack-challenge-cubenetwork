@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -47,5 +48,14 @@ public class UserController {
         return new ResponseEntity<>(users, HttpStatusCode.valueOf(200));
     }
 
+   @PutMapping("/update")
+    public ResponseEntity<User> updateUser(@RequestBody User updatedUser) {
+        User updated = userService.userUpdate(updatedUser);
+        if (updated!= null) {
+            return new ResponseEntity<>(updated, org.springframework.http.HttpStatus.OK);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    } 
 
 }
