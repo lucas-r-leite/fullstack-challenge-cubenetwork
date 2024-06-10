@@ -1,7 +1,5 @@
 package com.example.ItauCuboNet.controller;
 
-import java.util.Optional;
-
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,16 +28,13 @@ public class UserController {
     private UserRepository userRepository;
 
     @PostMapping("/save")
-    public ResponseEntity<User> createUser(@RequestBody User body) {
-
-        Optional<User> user = this.userRepository.findByName(body.getName());
-
-        if(user.isPresent()) {
-            return ResponseEntity.badRequest().build();
+    public ResponseEntity<?> createUser(@RequestBody User body) {
+        if (userRepository.findByName(body.getName()).isPresent()) {
+            return ResponseEntity.status(400).body("User with the same name already exists");
         }
-        
+
         User savedUser = userService.save(body);
-       return new ResponseEntity<>(savedUser, HttpStatusCode.valueOf(201));
+        return new ResponseEntity<>(savedUser, HttpStatusCode.valueOf(201));
     }
 
     @GetMapping("/all")
@@ -48,14 +43,13 @@ public class UserController {
         return new ResponseEntity<>(users, HttpStatusCode.valueOf(200));
     }
 
-   @PutMapping("/update")
-    public ResponseEntity<User> updateUser(@RequestBody User updatedUser) {
-        User updated = userService.userUpdate(updatedUser);
-        if (updated!= null) {
+    @PutMapping("/update")
+    public ResponseEntity<?> updateUser(@RequestBody User updatedUser) {
+        User updated = userService.updateUser(updatedUser);
+        if (updated != null) {
             return new ResponseEntity<>(updated, org.springframework.http.HttpStatus.OK);
         } else {
-            return ResponseEntity.notFound().build();
+            return ResponseEntity.status(404).body("User not found");
         }
-    } 
-
+    }
 }
