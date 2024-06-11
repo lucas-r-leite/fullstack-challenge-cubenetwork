@@ -1,0 +1,32 @@
+<div class="container">
+  <form (ngSubmit)="onSubmit()" #userForm="ngForm">
+    <div class="form"> <input type="text" [(ngModel)]="user.name" name="name" placeholder="First name" required
+        #name="ngModel" />
+      <input placeholder="Participation" type="number" [(ngModel)]="user.participation" name="participation" required
+        #participation="ngModel" />
+      <button>Send</button>
+    </div>
+  </form>
+
+  <div class="data-section">
+    <h2>DATA</h2>
+    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Participation</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let user of users">
+          <td>{{ user.name }}</td>
+          <td>{{ user.participation }}%</td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="chart">
+      <!-- Chart implementation -->
+    </div>
+  </div>
+</div>
