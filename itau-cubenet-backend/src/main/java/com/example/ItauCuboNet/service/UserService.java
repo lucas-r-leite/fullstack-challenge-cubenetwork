@@ -20,6 +20,9 @@ public class UserService {
 
     @Transactional
     public User save(User user) throws Exception {
+        if (user == null || user.getName() == null || user.getParticipation() == null) {
+            throw new RuntimeException("Invalid user data");
+        }
         float totalParticipation = getTotalParticipation() + user.getParticipation();
         if (totalParticipation > 100) {
             throw new Exception("Total participation cannot exceed 100. Current total: " + getTotalParticipation());
@@ -33,15 +36,19 @@ public class UserService {
 
     public List<UserDTO> findAll() {
         return userRepository.findAll().stream()
-                              .map(this::convertToDTO)
-                              .toList();
+                .map(this::convertToDTO)
+                .toList();
     }
 
     public User updateUser(User updatedUser) throws Exception {
+        if (updatedUser == null || updatedUser.getName() == null) {
+            throw new RuntimeException("Invalid user data");
+        }
         User existingUser = userRepository.findByName(updatedUser.getName())
-                                          .orElseThrow(() -> new Exception("User not found"));
+                .orElseThrow(() -> new Exception("User not found"));
 
-        float totalParticipation = getTotalParticipation() - existingUser.getParticipation() + updatedUser.getParticipation();
+        float totalParticipation = getTotalParticipation() - existingUser.getParticipation()
+                + updatedUser.getParticipation();
         if (totalParticipation > 100) {
             throw new Exception("Total participation cannot exceed 100. Current total: " + getTotalParticipation());
         }
@@ -54,9 +61,10 @@ public class UserService {
 
     private float getTotalParticipation() {
         return userRepository.findAll().stream()
-                              .map(User::getParticipation)
-                              .reduce(0f, Float::sum);
+                .map(User::getParticipation)
+                .reduce(0f, Float::sum);
     }
+
     public void deleteUser(Long id) throws Exception {
         Optional<User> user = userRepository.findById(id);
         if (user.isPresent()) {
