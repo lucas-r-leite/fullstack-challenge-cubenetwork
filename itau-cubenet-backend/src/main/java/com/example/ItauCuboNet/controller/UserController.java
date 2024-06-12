@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.ItauCuboNet.dto.UserDTO;
 import com.example.ItauCuboNet.entity.User;
-import com.example.ItauCuboNet.repository.UserRepository;
+// import com.example.ItauCuboNet.repository.UserRepository;
 import com.example.ItauCuboNet.service.UserService;
 
 @RestController
@@ -26,14 +26,14 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    @Autowired
-    private UserRepository userRepository;
+    // @Autowired
+    // private UserRepository userRepository;
 
     @PostMapping("/save")
     public ResponseEntity<?> createUser(@RequestBody User body) {
-        if (userRepository.findByFirstNameAndLastName(body.getFirstName(), body.getLastName()).isPresent()) {
-            return ResponseEntity.status(400).body("User with the same first name and last name already exists");
-        }
+        // if (userRepository.findByFirstNameAndLastName(body.getFirstName(), body.getLastName()).isPresent()) {
+        //     return ResponseEntity.status(400).body("User with the same first name and last name already exists");
+        // }
 
         try {
             User savedUser = userService.save(body);
