@@ -16,12 +16,16 @@
         <tr>
           <th>Name</th>
           <th>Participation</th>
+          <th>Actions</th>
         </tr>
       </thead>
       <tbody>
         <tr *ngFor="let user of users">
           <td>{{ user.name }}</td>
           <td>{{ user.participation }}%</td>
+          <td>
+            <button (click)="deleteUser(user.id)">Delete</button>
+          </td>
         </tr>
       </tbody>
     </table>

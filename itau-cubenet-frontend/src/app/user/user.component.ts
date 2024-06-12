@@ -39,4 +39,17 @@ export class UserComponent implements OnInit {
       });
   }
 
+  deleteUser(id: number): void {
+    this.userService.deleteUser(id).subscribe({
+      next: () => {
+        console.log('User deleted successfully!');
+        this.getUsers(); // Refresh the user list
+      },
+      error: (err) => {
+        console.error('Error deleting user:', err);
+      }
+    });
+  }
+
+
 }

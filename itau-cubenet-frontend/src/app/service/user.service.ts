@@ -26,5 +26,9 @@ export class UserService {
     return this.http.post(`${this.baseUrl}/save`, user, this.httpOptions);
   }
 
+  deleteUser(id: number): Observable<any> {
+    return this.http.delete(`${this.baseUrl}/delete/${id}`);
+  }
+
 
 }
