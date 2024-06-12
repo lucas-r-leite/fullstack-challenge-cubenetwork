@@ -2,41 +2,43 @@
   <img src="https://cubo.network/assets/images/cubo.svg" width="200">
 </p>
 
-# { "developer": "fullstack" }
+# Backend
 
-The objective of this challenge is to evaluate your domain in fullstack development: its organization, style and good practices with code, APIs creation, frameworks knowledge and technologies.
+A Spring Boot application for managing users and their participations.
 
-## Rules
+This application provides a RESTful API for creating, reading, updating, and deleting users. Each user has a unique name and a participation value, which cannot exceed 100% when combined with other users.
 
-1. Your code should be made available in a public or private repository, on your personal github or bitbucket;
-2. Send the link to dev@cubo.network;
-3. We use Angular and Node.js with Serverless, but you can feel free to choose other technologies;
+## API Endpoints
 
-## Challenge
+### User Controller
 
-### Front-end
+    POST /api/user/save: Create a new user
+    GET /api/user/all: Retrieve all users
+    PUT /api/user/update: Update an existing user
+    DELETE /api/user/delete/{id}: Delete a user by ID
 
-The following layout should be developed
-![layout](layout-onepage.png)
+## Technical Details
 
-[You can download the PSD here](layout-onepage.psd)
+### Technologies
 
-- You can use the libs and frameworks that make you more comfortable;
-- All fields are required in the form;
-- We'll be happy if you develop tests for it;
+    Spring Boot 3.3
+    Java 22
+    Lombok
+    JPA for database persistence
+    Hibernate for database interactions
 
-### Back-end
+## Database
 
-The layout has a form, a table with percentage information of participation and a pizza graph that represents this distribution.
+The application uses a h2 database to store user data.
 
-- You need to create APIs that sends and receives these informations;
-- We'll be happy if you develop tests for it;
-- In case of inconsistency, return the error in a structured JSON with HTTP 400 code;
+## Getting Started
 
-#### Plus
+### Prerequisites
 
-Feel free to make improviments like new funcionalities, visual optimizations, API security, etc. 😉
+    Java 22 installed
+    Spring Boot CLI installed (optional)
 
-## Questions?
+### Running the Application
 
-Send your questions directly to dev@cubo.network or opening a issue.
+    Run the application using your IDE or by executing the following command: mvn spring-boot:run
+    Access the API endpoints using a tool like Postman or cURL
