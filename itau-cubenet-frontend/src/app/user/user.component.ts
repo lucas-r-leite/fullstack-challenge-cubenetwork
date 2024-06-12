@@ -23,7 +23,7 @@ export class UserComponent implements OnInit {
   }
 
   getUsers(): void {
-    this.userService.getBooks().subscribe(users => this.users = users);
+    this.userService.getUsers().subscribe(users => this.users = users);
   }
 
   onSubmit(): void {

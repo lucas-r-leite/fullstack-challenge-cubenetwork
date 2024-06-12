@@ -18,7 +18,7 @@ export class UserService {
     headers: new HttpHeaders({ 'Content-Type': 'application/json' })
   };
 
-  getBooks(): Observable<User[]> {
+  getUsers(): Observable<User[]> {
     return this.http.get<User[]>(`${this.baseUrl}/all`);
   }
 
