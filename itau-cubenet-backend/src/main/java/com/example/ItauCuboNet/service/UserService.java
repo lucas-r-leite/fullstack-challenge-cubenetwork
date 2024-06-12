@@ -20,18 +20,18 @@ public class UserService {
 
     @Transactional
     public User save(User user) throws Exception {
-        if (user == null || user.getName() == null || user.getParticipation() == null) {
+        if (user == null || user.getFirstName() == null || user.getLastName() == null || user.getEnterprise() == null || user.getParticipation() == null) {
             throw new RuntimeException("Invalid user data");
         }
-        float totalParticipation = getTotalParticipation() + user.getParticipation();
+        float totalParticipation = getTotalParticipationByEnterprise(user.getEnterprise()) + user.getParticipation();
         if (totalParticipation > 100) {
-            throw new Exception("Total participation cannot exceed 100. Current total: " + getTotalParticipation());
+            throw new Exception("Total participation for enterprise " + user.getEnterprise() + " cannot exceed 100. Current total: " + getTotalParticipationByEnterprise(user.getEnterprise()));
         }
         return userRepository.save(user);
     }
 
     private UserDTO convertToDTO(User user) {
-        return new UserDTO(user.getId(), user.getName(), user.getParticipation());
+        return new UserDTO(user.getId(), user.getFirstName(), user.getLastName(), user.getEnterprise(), user.getParticipation());
     }
 
     public List<UserDTO> findAll() {
@@ -41,26 +41,27 @@ public class UserService {
     }
 
     public User updateUser(User updatedUser) throws Exception {
-        if (updatedUser == null || updatedUser.getName() == null) {
+        if (updatedUser == null || updatedUser.getFirstName() == null || updatedUser.getLastName() == null) {
             throw new RuntimeException("Invalid user data");
         }
-        User existingUser = userRepository.findByName(updatedUser.getName())
+        User existingUser = userRepository.findByFirstNameAndLastName(updatedUser.getFirstName(), updatedUser.getLastName())
                 .orElseThrow(() -> new Exception("User not found"));
 
-        float totalParticipation = getTotalParticipation() - existingUser.getParticipation()
-                + updatedUser.getParticipation();
+        float totalParticipation = getTotalParticipationByEnterprise(updatedUser.getEnterprise()) - existingUser.getParticipation() + updatedUser.getParticipation();
         if (totalParticipation > 100) {
-            throw new Exception("Total participation cannot exceed 100. Current total: " + getTotalParticipation());
+            throw new Exception("Total participation for enterprise " + updatedUser.getEnterprise() + " cannot exceed 100. Current total: " + getTotalParticipationByEnterprise(updatedUser.getEnterprise()));
         }
 
-        existingUser.setName(updatedUser.getName());
+        existingUser.setFirstName(updatedUser.getFirstName());
+        existingUser.setLastName(updatedUser.getLastName());
+        existingUser.setEnterprise(updatedUser.getEnterprise());
         existingUser.setParticipation(updatedUser.getParticipation());
 
         return userRepository.save(existingUser);
     }
 
-    private float getTotalParticipation() {
-        return userRepository.findAll().stream()
+    private float getTotalParticipationByEnterprise(String enterprise) {
+        return userRepository.findByEnterprise(enterprise).stream()
                 .map(User::getParticipation)
                 .reduce(0f, Float::sum);
     }

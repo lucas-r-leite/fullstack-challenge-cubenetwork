@@ -25,8 +25,14 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "name", nullable = false, columnDefinition = "varchar(100)", unique = true)
-    private String name;
+    @Column(name = "first_name", nullable = false, columnDefinition = "varchar(30)")
+    private String firstName;
+
+    @Column(name = "last_name", nullable = false, columnDefinition = "varchar(50)")
+    private String lastName;
+
+    @Column(name = "enterprise", nullable = false, columnDefinition = "varchar(80)", unique = true)
+    private String enterprise;
 
     @Column(name="participation", nullable = false, columnDefinition = "float")
     private Float participation;

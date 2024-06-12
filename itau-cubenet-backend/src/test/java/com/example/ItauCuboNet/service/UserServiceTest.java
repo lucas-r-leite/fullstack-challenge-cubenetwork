@@ -43,32 +43,44 @@ public class UserServiceTest {
     public void setup() {
         user = User.builder()
                    .id(1L)
-                   .name("John Doe")
+                   .firstName("John")
+                   .lastName("Doe")
+                   .enterprise("TechCorp")
                    .participation(10.0f)
                    .build();
     }
 
     @Test
     public void testSaveUserSuccess() throws Exception {
-        when(userRepository.findAll()).thenReturn(List.of());
+        when(userRepository.findByEnterprise(anyString())).thenReturn(List.of());
         when(userRepository.save(any(User.class))).thenReturn(user);
 
         User savedUser = userService.save(user);
 
         assertNotNull(savedUser);
-        assertEquals(user.getName(), savedUser.getName());
+        assertEquals(user.getFirstName(), savedUser.getFirstName());
+        assertEquals(user.getLastName(), savedUser.getLastName());
+        assertEquals(user.getEnterprise(), savedUser.getEnterprise());
         assertEquals(user.getParticipation(), savedUser.getParticipation());
     }
 
     @Test
     public void testSaveUserExceedsTotalParticipation() {
-        when(userRepository.findAll()).thenReturn(List.of(user, User.builder().id(2L).name("Jane Doe").participation(95.0f).build()));
+        when(userRepository.findByEnterprise(anyString())).thenReturn(List.of(
+            user, User.builder()
+                      .id(2L)
+                      .firstName("Jane")
+                      .lastName("Doe")
+                      .enterprise("TechCorp")
+                      .participation(95.0f)
+                      .build()
+        ));
 
         Exception exception = assertThrows(Exception.class, () -> {
             userService.save(user);
         });
 
-        String expectedMessage = "Total participation cannot exceed 100. Current total: ";
+        String expectedMessage = "Total participation for enterprise TechCorp cannot exceed 100. Current total: ";
         String actualMessage = exception.getMessage();
 
         assertTrue(actualMessage.contains(expectedMessage));
@@ -76,11 +88,17 @@ public class UserServiceTest {
 
     @Test
     public void testUpdateUserSuccess() throws Exception {
-        when(userRepository.findByName(anyString())).thenReturn(Optional.of(user));
-        when(userRepository.findAll()).thenReturn(List.of(user));
+        when(userRepository.findByFirstNameAndLastName(anyString(), anyString())).thenReturn(Optional.of(user));
+        when(userRepository.findByEnterprise(anyString())).thenReturn(List.of(user));
         when(userRepository.save(any(User.class))).thenReturn(user);
 
-        User updatedUser = new User(1L, "John Doe", 20.0f);
+        User updatedUser = User.builder()
+                               .id(1L)
+                               .firstName("John")
+                               .lastName("Doe")
+                               .enterprise("TechCorp")
+                               .participation(20.0f)
+                               .build();
         User result = userService.updateUser(updatedUser);
 
         assertNotNull(result);
@@ -89,16 +107,30 @@ public class UserServiceTest {
 
     @Test
     public void testUpdateUserExceedsTotalParticipation() {
-        when(userRepository.findByName(anyString())).thenReturn(Optional.of(user));
-        when(userRepository.findAll()).thenReturn(List.of(user, User.builder().id(2L).name("Jane Doe").participation(80.0f).build()));
+        when(userRepository.findByFirstNameAndLastName(anyString(), anyString())).thenReturn(Optional.of(user));
+        when(userRepository.findByEnterprise(anyString())).thenReturn(List.of(
+            user, User.builder()
+                      .id(2L)
+                      .firstName("Jane")
+                      .lastName("Doe")
+                      .enterprise("TechCorp")
+                      .participation(80.0f)
+                      .build()
+        ));
 
-        User updatedUser = new User(1L, "John Doe", 30.0f);
+        User updatedUser = User.builder()
+                               .id(1L)
+                               .firstName("John")
+                               .lastName("Doe")
+                               .enterprise("TechCorp")
+                               .participation(30.0f)
+                               .build();
 
         Exception exception = assertThrows(Exception.class, () -> {
             userService.updateUser(updatedUser);
         });
 
-        String expectedMessage = "Total participation cannot exceed 100. Current total: ";
+        String expectedMessage = "Total participation for enterprise TechCorp cannot exceed 100. Current total: ";
         String actualMessage = exception.getMessage();
 
         assertTrue(actualMessage.contains(expectedMessage));

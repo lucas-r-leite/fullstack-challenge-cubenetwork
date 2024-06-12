@@ -31,8 +31,8 @@ public class UserController {
 
     @PostMapping("/save")
     public ResponseEntity<?> createUser(@RequestBody User body) {
-        if (userRepository.findByName(body.getName()).isPresent()) {
-            return ResponseEntity.status(400).body("User with the same name already exists");
+        if (userRepository.findByFirstNameAndLastName(body.getFirstName(), body.getLastName()).isPresent()) {
+            return ResponseEntity.status(400).body("User with the same first name and last name already exists");
         }
 
         try {
@@ -59,7 +59,7 @@ public class UserController {
         }
     }
 
-     @DeleteMapping("/delete/{id}")
+    @DeleteMapping("/delete/{id}")
     public ResponseEntity<?> deleteUser(@PathVariable Long id) {
         try {
             userService.deleteUser(id);
