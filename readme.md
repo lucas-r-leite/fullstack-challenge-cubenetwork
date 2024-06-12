@@ -42,3 +42,23 @@ The application uses a h2 database to store user data.
 
     Run the application using your IDE or by executing the following command: mvn spring-boot:run
     Access the API endpoints using a tool like Postman or cURL
+
+## Docker
+
+Building the Docker Image
+
+To build a Docker image for this application, run the following command:
+
+```docker
+docker build -t itaucubonet.
+```
+
+Running the Docker Container
+
+To run the Docker container, use the following command:
+
+```docker
+docker run -p 8080:8080 itaucubonet
+```
+
+This will start the application on port 8080. You can access the API endpoints using a tool like Postman or cURL.
