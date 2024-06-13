@@ -34,6 +34,7 @@ export class UserComponent implements OnInit {
         next: (user) => {
           console.log('User added:', user);
           this.getUsers();
+          this.user = {} as User;  // Clear the form fields
         },
         error: (err) => {
           console.error('Error adding user:', err);

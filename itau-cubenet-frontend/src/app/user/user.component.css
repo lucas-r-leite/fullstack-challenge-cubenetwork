@@ -4,14 +4,34 @@
   align-items: center;
 }
 
+.btn{
+  margin: 5px;
+}
+
+.btn-primary{
+  background-color: #00b8e2;
+  border-color: whitesmoke;
+}
+
 .form {
   display: flex;
   gap: 10px;
-  margin-bottom: 20px;
+  margin-bottom: 10px;
+}
+
+.user-form{
+ padding: 10px;
 }
 
 .data-section {
   width: 80%;
+  text-align: center;
+}
+
+header{
+  padding-top: 10px;
+  background-color: #00b8e2;
+  padding: 10px;
   text-align: center;
 }
 

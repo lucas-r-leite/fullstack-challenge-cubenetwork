@@ -1,16 +1,19 @@
 <div class="container">
-  <form (ngSubmit)="onSubmit()" #userForm="ngForm">
+  <header>
+    <form (ngSubmit)="onSubmit()" #userForm="ngForm" class="user-form">
     <div class="form">
-      <input type="text" [(ngModel)]="user.firstName" name="firstName" placeholder="First name" required
+      <input type="text" class="form-control" [(ngModel)]="user.firstName" name="firstName" placeholder="First name" required
         #name="ngModel" />
-      <input type="text" [(ngModel)]="user.lastName" name="lastName" placeholder="Last name" required #name="ngModel" />
-      <input type="text" [(ngModel)]="user.enterprise" name="enterprise" placeholder="Enterprise" required
+      <input type="text" class="form-control" [(ngModel)]="user.lastName" name="lastName" placeholder="Last name" required #name="ngModel" />
+      <input type="text" class="form-control" [(ngModel)]="user.enterprise" name="enterprise" placeholder="Enterprise" required
         #name="ngModel" />
-      <input placeholder="Participation" type="number" [(ngModel)]="user.participation" name="participation" required
+      <input placeholder="Participation" type="number" class="form-control" [(ngModel)]="user.participation" name="participation" required
         #participation="ngModel" />
-      <button>Send</button>
+      <button type="submit" class="btn btn-primary">Send</button>
     </div>
   </form>
+
+  </header>
 
   <div class="data-section">
     <h2>DATA</h2>
@@ -32,29 +35,30 @@
           <td>{{ user.enterprise }}</td>
           <td>{{ user.participation }}%</td>
           <td>
-            <button (click)="deleteUser(user.id)">Delete</button>
-            <button (click)="openUpdateModal(user)">Update</button>
+            <button (click)="openUpdateModal(user)" type="button" class="btn btn-primary">Update</button>
+            <button (click)="deleteUser(user.id)" type="button" class="btn btn-danger">Delete</button>
           </td>
         </tr>
       </tbody>
     </table>
 
+          <!-- Modal implementation -->
     <div class="modal" [class.show]="isUpdateModalOpen">
       <div class="modal-content">
         <span class="close" (click)="closeUpdateModal()">&times;</span>
         <h2>Update User</h2>
         <form (ngSubmit)="onUpdate()" #updateForm="ngForm">
           <div class="form">
-            <input type="text" [(ngModel)]="selectedUser.firstName" name="firstName" placeholder="First name" required
+            <input type="text" class="form-control" [(ngModel)]="selectedUser.firstName" name="firstName" placeholder="First name" required
               #name="ngModel" />
-            <input type="text" [(ngModel)]="selectedUser.lastName" name="lastName" placeholder="Last name" required
+            <input type="text" class="form-control" [(ngModel)]="selectedUser.lastName" name="lastName" placeholder="Last name" required
               #name="ngModel" />
-            <input type="text" [(ngModel)]="selectedUser.enterprise" name="enterprise" placeholder="Enterprise" required
+            <input type="text" class="form-control" [(ngModel)]="selectedUser.enterprise" name="enterprise" placeholder="Enterprise" required
               #name="ngModel" />
-            <input placeholder="Participation" type="number" [(ngModel)]="selectedUser.participation"
+            <input placeholder="Participation" type="number" class="form-control" [(ngModel)]="selectedUser.participation"
               name="participation" required #participation="ngModel" />
-            <button type="submit">Update</button>
-            <button type="button" (click)="closeUpdateModal()">Cancel</button>
+            <button type="submit" class="btn btn-primary">Update</button>
+            <button type="button" class="btn btn-danger" (click)="closeUpdateModal()">Cancel</button>
           </div>
         </form>
       </div>
