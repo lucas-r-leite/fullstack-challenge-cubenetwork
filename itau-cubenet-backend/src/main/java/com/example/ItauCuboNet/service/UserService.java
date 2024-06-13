@@ -44,7 +44,8 @@ public class UserService {
         if (updatedUser == null || updatedUser.getFirstName() == null || updatedUser.getLastName() == null) {
             throw new RuntimeException("Invalid user data");
         }
-        User existingUser = userRepository.findByFirstNameAndLastName(updatedUser.getFirstName(), updatedUser.getLastName())
+
+        User existingUser = userRepository.findById(updatedUser.getId())
                 .orElseThrow(() -> new Exception("User not found"));
 
         float totalParticipation = getTotalParticipationByEnterprise(updatedUser.getEnterprise()) - existingUser.getParticipation() + updatedUser.getParticipation();

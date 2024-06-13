@@ -88,7 +88,7 @@ public class UserServiceTest {
 
     @Test
     public void testUpdateUserSuccess() throws Exception {
-        when(userRepository.findByFirstNameAndLastName(anyString(), anyString())).thenReturn(Optional.of(user));
+        when(userRepository.findById(anyLong())).thenReturn(Optional.of(user));
         when(userRepository.findByEnterprise(anyString())).thenReturn(List.of(user));
         when(userRepository.save(any(User.class))).thenReturn(user);
 
@@ -102,12 +102,15 @@ public class UserServiceTest {
         User result = userService.updateUser(updatedUser);
 
         assertNotNull(result);
+        assertEquals(updatedUser.getFirstName(), result.getFirstName());
+        assertEquals(updatedUser.getLastName(), result.getLastName());
+        assertEquals(updatedUser.getEnterprise(), result.getEnterprise());
         assertEquals(updatedUser.getParticipation(), result.getParticipation());
     }
 
     @Test
     public void testUpdateUserExceedsTotalParticipation() {
-        when(userRepository.findByFirstNameAndLastName(anyString(), anyString())).thenReturn(Optional.of(user));
+        when(userRepository.findById(anyLong())).thenReturn(Optional.of(user));
         when(userRepository.findByEnterprise(anyString())).thenReturn(List.of(
             user, User.builder()
                       .id(2L)
