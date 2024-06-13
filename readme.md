@@ -6,7 +6,7 @@
 
 A Spring Boot application for managing users and their participations.
 
-This application provides a RESTful API for creating, reading, updating, and deleting users. Each user has a unique name and a participation value, which cannot exceed 100% when combined with other users.
+This application provides a RESTful API for creating, reading, updating, and deleting users. Each user has a first name, last name, enterprise and a participation value, which cannot exceed 100% when combined with other users in the same enterprise.
 
 ## API Endpoints
 
