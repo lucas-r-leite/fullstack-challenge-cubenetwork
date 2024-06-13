@@ -1,6 +1,10 @@
 <div class="container">
   <form (ngSubmit)="onSubmit()" #userForm="ngForm">
-    <div class="form"> <input type="text" [(ngModel)]="user.name" name="name" placeholder="First name" required
+    <div class="form">
+      <input type="text" [(ngModel)]="user.firstName" name="firstName" placeholder="First name" required
+        #name="ngModel" />
+      <input type="text" [(ngModel)]="user.lastName" name="lastName" placeholder="Last name" required #name="ngModel" />
+      <input type="text" [(ngModel)]="user.enterprise" name="enterprise" placeholder="Enterprise" required
         #name="ngModel" />
       <input placeholder="Participation" type="number" [(ngModel)]="user.participation" name="participation" required
         #participation="ngModel" />
@@ -14,14 +18,18 @@
     <table>
       <thead>
         <tr>
-          <th>Name</th>
+          <th>First Name</th>
+          <th>Last Name</th>
+          <th>Enterprise</th>
           <th>Participation</th>
           <th>Actions</th>
         </tr>
       </thead>
       <tbody>
         <tr *ngFor="let user of users">
-          <td>{{ user.name }}</td>
+          <td>{{ user.firstName }}</td>
+          <td>{{ user.lastName }}</td>
+          <td>{{ user.enterprise }}</td>
           <td>{{ user.participation }}%</td>
           <td>
             <button (click)="deleteUser(user.id)">Delete</button>
