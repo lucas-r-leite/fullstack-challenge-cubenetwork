@@ -31,7 +31,7 @@ public class User {
     @Column(name = "last_name", nullable = false, columnDefinition = "varchar(50)")
     private String lastName;
 
-    @Column(name = "enterprise", nullable = false, columnDefinition = "varchar(80)", unique = true)
+    @Column(name = "enterprise", nullable = false, columnDefinition = "varchar(80)")
     private String enterprise;
 
     @Column(name="participation", nullable = false, columnDefinition = "float")
