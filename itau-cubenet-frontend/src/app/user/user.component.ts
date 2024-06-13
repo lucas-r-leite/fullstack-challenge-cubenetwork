@@ -15,6 +15,8 @@ export class UserComponent implements OnInit {
 
   users: User[] = [];
   user: User = {} as User;
+  selectedUser: User = {} as User;
+  isUpdateModalOpen = false;
 
   constructor(private userService: UserService) { }
 
@@ -51,5 +53,27 @@ export class UserComponent implements OnInit {
     });
   }
 
+
+  openUpdateModal(user: User): void {
+    this.selectedUser = { ...user };
+    this.isUpdateModalOpen = true;
+  }
+
+  closeUpdateModal(): void {
+    this.isUpdateModalOpen = false;
+  }
+
+  onUpdate(): void {
+    this.userService.updateUser(this.selectedUser).subscribe({
+      next: (user) => {
+        console.log('User updated:', user);
+        this.getUsers();
+        this.closeUpdateModal();
+      },
+      error: (err) => {
+        console.error('Error updating user:', err);
+      }
+    });
+  }
 
 }

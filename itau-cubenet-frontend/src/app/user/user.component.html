@@ -33,10 +33,33 @@
           <td>{{ user.participation }}%</td>
           <td>
             <button (click)="deleteUser(user.id)">Delete</button>
+            <button (click)="openUpdateModal(user)">Update</button>
           </td>
         </tr>
       </tbody>
     </table>
+
+    <div class="modal" [class.show]="isUpdateModalOpen">
+      <div class="modal-content">
+        <span class="close" (click)="closeUpdateModal()">&times;</span>
+        <h2>Update User</h2>
+        <form (ngSubmit)="onUpdate()" #updateForm="ngForm">
+          <div class="form">
+            <input type="text" [(ngModel)]="selectedUser.firstName" name="firstName" placeholder="First name" required
+              #name="ngModel" />
+            <input type="text" [(ngModel)]="selectedUser.lastName" name="lastName" placeholder="Last name" required
+              #name="ngModel" />
+            <input type="text" [(ngModel)]="selectedUser.enterprise" name="enterprise" placeholder="Enterprise" required
+              #name="ngModel" />
+            <input placeholder="Participation" type="number" [(ngModel)]="selectedUser.participation"
+              name="participation" required #participation="ngModel" />
+            <button type="submit">Update</button>
+            <button type="button" (click)="closeUpdateModal()">Cancel</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
     <div class="chart">
       <!-- Chart implementation -->
     </div>
