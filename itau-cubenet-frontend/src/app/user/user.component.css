@@ -4,11 +4,11 @@
   align-items: center;
 }
 
-.btn{
+.btn {
   margin: 5px;
 }
 
-.btn-primary{
+.btn-primary {
   background-color: #00b8e2;
   border-color: whitesmoke;
 }
@@ -19,8 +19,8 @@
   margin-bottom: 10px;
 }
 
-.user-form{
- padding: 10px;
+.user-form {
+  padding: 10px;
 }
 
 .data-section {
@@ -28,7 +28,7 @@
   text-align: center;
 }
 
-header{
+header {
   padding-top: 10px;
   background-color: #00b8e2;
   padding: 10px;

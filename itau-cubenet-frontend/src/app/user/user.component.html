@@ -1,4 +1,4 @@
-<div class="container">
+<div>
   <header>
     <form (ngSubmit)="onSubmit()" #userForm="ngForm" class="user-form">
       <div class="form">
@@ -15,64 +15,67 @@
     </form>
   </header>
 
-  <div class="data-section">
-    <h2>DATA</h2>
-    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-    <div class="row">
-      <div class="col-md-6">
-        <table>
-          <thead>
-            <tr>
-              <th>First Name</th>
-              <th>Last Name</th>
-              <th>Enterprise</th>
-              <th>Participation</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let user of users">
-              <td>{{ user.firstName }}</td>
-              <td>{{ user.lastName }}</td>
-              <td>{{ user.enterprise }}</td>
-              <td>{{ user.participation }}%</td>
-              <td>
-                <button (click)="openUpdateModal(user)" type="button" class="btn btn-primary">Update</button>
-                <button (click)="deleteUser(user.id)" type="button" class="btn btn-danger">Delete</button>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-      <div class="col-md-6">
-        <div *ngFor="let chart of charts">
-          <h3>{{ chart.enterprise }}</h3>
-          <div class="chart-container" id="chart-container-{{ chart.enterprise }}">
-            <canvas id="chart-{{ chart.enterprise }}">{{chart.chart}}</canvas>
+  <div class="container">
+    <div class="data-section">
+      <h2>DATA</h2>
+      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+      <div class="row">
+        <div class="col-md-6">
+          <table>
+            <thead>
+              <tr>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>Enterprise</th>
+                <th>Participation</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let user of users">
+                <td>{{ user.firstName }}</td>
+                <td>{{ user.lastName }}</td>
+                <td>{{ user.enterprise }}</td>
+                <td>{{ user.participation }}%</td>
+                <td>
+                  <button (click)="openUpdateModal(user)" type="button" class="btn btn-primary">Update</button>
+                  <button (click)="deleteUser(user.id)" type="button" class="btn btn-danger">Delete</button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="col-md-6">
+          <div *ngFor="let chart of charts">
+            <h3>{{ chart.enterprise }}</h3>
+            <div class="chart-container" id="chart-container-{{ chart.enterprise }}">
+              <canvas id="chart-{{ chart.enterprise }}">{{chart.chart}}</canvas>
+            </div>
           </div>
+        </div>
+      </div>
+
+      <div class="modal" [class.show]="isUpdateModalOpen">
+        <div class="modal-content">
+          <span class="close" (click)="closeUpdateModal()">&times;</span>
+          <h2>Update User</h2>
+          <form (ngSubmit)="onUpdate()" #updateForm="ngForm">
+            <div class="form">
+              <input type="text" class="form-control" [(ngModel)]="selectedUser.firstName" name="firstName"
+                placeholder="First name" required #name="ngModel" />
+              <input type="text" class="form-control" [(ngModel)]="selectedUser.lastName" name="lastName"
+                placeholder="Last name" required #name="ngModel" />
+              <input type="text" class="form-control" [(ngModel)]="selectedUser.enterprise" name="enterprise"
+                placeholder="Enterprise" required #name="ngModel" />
+              <input placeholder="Participation" type="number" class="form-control"
+                [(ngModel)]="selectedUser.participation" name="participation" required #participation="ngModel" />
+              <button type="submit" class="btn btn-primary">Update</button>
+              <button type="button" class="btn btn-danger" (click)="closeUpdateModal()">Cancel</button>
+            </div>
+          </form>
         </div>
       </div>
     </div>
 
-    <div class="modal" [class.show]="isUpdateModalOpen">
-      <div class="modal-content">
-        <span class="close" (click)="closeUpdateModal()">&times;</span>
-        <h2>Update User</h2>
-        <form (ngSubmit)="onUpdate()" #updateForm="ngForm">
-          <div class="form">
-            <input type="text" class="form-control" [(ngModel)]="selectedUser.firstName" name="firstName"
-              placeholder="First name" required #name="ngModel" />
-            <input type="text" class="form-control" [(ngModel)]="selectedUser.lastName" name="lastName"
-              placeholder="Last name" required #name="ngModel" />
-            <input type="text" class="form-control" [(ngModel)]="selectedUser.enterprise" name="enterprise"
-              placeholder="Enterprise" required #name="ngModel" />
-            <input placeholder="Participation" type="number" class="form-control"
-              [(ngModel)]="selectedUser.participation" name="participation" required #participation="ngModel" />
-            <button type="submit" class="btn btn-primary">Update</button>
-            <button type="button" class="btn btn-danger" (click)="closeUpdateModal()">Cancel</button>
-          </div>
-        </form>
-      </div>
-    </div>
   </div>
 </div>
