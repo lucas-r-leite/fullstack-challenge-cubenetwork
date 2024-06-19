@@ -13,7 +13,6 @@
         <button type="submit" class="btn btn-primary">Send</button>
       </div>
     </form>
-
   </header>
 
   <div class="data-section">
@@ -46,14 +45,15 @@
         </table>
       </div>
       <div class="col-md-6">
-        <div class="chart-container" id="chart-container">
-          <canvas id="MyChart">{{chart}}</canvas>
-          <!-- Chart implementation -->
+        <div *ngFor="let chart of charts">
+          <h3>{{ chart.enterprise }}</h3>
+          <div class="chart-container" id="chart-container-{{ chart.enterprise }}">
+            <canvas id="chart-{{ chart.enterprise }}">{{chart.chart}}</canvas>
+          </div>
         </div>
       </div>
     </div>
 
-    <!-- Modal implementation -->
     <div class="modal" [class.show]="isUpdateModalOpen">
       <div class="modal-content">
         <span class="close" (click)="closeUpdateModal()">&times;</span>
@@ -74,6 +74,5 @@
         </form>
       </div>
     </div>
-
   </div>
 </div>

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { NgFor } from '@angular/common';
 import { User } from '../models/user';
 import { FormsModule } from '@angular/forms';
@@ -12,54 +12,57 @@ import { Chart } from 'chart.js/auto';
   templateUrl: './user.component.html',
   styleUrl: './user.component.css'
 })
-export class UserComponent implements OnInit {
+
+export class UserComponent implements OnInit, OnDestroy {
 
   users: User[] = [];
   user: User = {} as User;
   selectedUser: User = {} as User;
   isUpdateModalOpen = false;
 
-  public chart: any;
+  public charts: { enterprise: string, chart: Chart<"doughnut", number[], string> }[] = [];
 
   constructor(private userService: UserService) { }
 
   ngOnInit(): void {
     this.getUsers();
-    this.createChart();
+  }
+
+  ngOnDestroy(): void {
+    this.destroyCharts();
   }
 
   getUsers(): void {
-    this.userService.getUsers().subscribe(users => this.users = users);
+    this.userService.getUsers().subscribe(users => {
+      this.users = users;
+      this.createCharts();
+    });
   }
 
   onSubmit(): void {
-    this.userService.addUser(this.user)
-      .subscribe({
-        next: (user) => {
-          console.log('User added:', user);
-          this.getUsers();
-          this.user = {} as User;  // Clear the form fields
-          this.createChart();
-        },
-        error: (err) => {
-          console.error('Error adding user:', err);
-        }
-      });
+    this.userService.addUser(this.user).subscribe({
+      next: (user) => {
+        console.log('User added:', user);
+        this.getUsers();
+        this.user = {} as User;
+      },
+      error: (err) => {
+        console.error('Error adding user:', err);
+      }
+    });
   }
 
   deleteUser(id: number): void {
     this.userService.deleteUser(id).subscribe({
       next: () => {
         console.log('User deleted successfully!');
-        this.getUsers(); // Refresh the user list
-        this.createChart();
+        this.getUsers();
       },
       error: (err) => {
         console.error('Error deleting user:', err);
       }
     });
   }
-
 
   openUpdateModal(user: User): void {
     this.selectedUser = { ...user };
@@ -76,7 +79,6 @@ export class UserComponent implements OnInit {
         console.log('User updated:', user);
         this.getUsers();
         this.closeUpdateModal();
-        this.createChart();
       },
       error: (err) => {
         console.error('Error updating user:', err);
@@ -84,32 +86,57 @@ export class UserComponent implements OnInit {
     });
   }
 
+  createCharts(): void {
+    this.destroyCharts();
+    const enterprises = this.groupUsersByEnterprise(this.users);
 
-  createChart() {
-    const userPercentages = this.users.map(user => user.participation); // calculate percentages
-    const userLabels = this.users.map(user => user.firstName); // get user names for labels
-
-    this.chart = new Chart("MyChart", {
-      type: 'doughnut',
-      data: {
-        labels: userLabels,
-        datasets: [{
-          label: 'User Percentages',
-          data: userPercentages,
-          backgroundColor: this.generateColors(userPercentages.length), // generate colors
-          hoverOffset: 4
-        }],
-      },
-      options: {
-        aspectRatio: 2.5
-      }
+    enterprises.forEach((users, enterprise) => {
+      const chartData = this.getChartData(users);
+      const chart = new Chart(`chart-${enterprise}`, {
+        type: 'doughnut',
+        data: chartData,
+        options: {
+          aspectRatio: 2.5
+        }
+      });
+      this.charts.push({ enterprise, chart });
     });
+  }
+
+  destroyCharts(): void {
+    this.charts.forEach(chart => chart.chart.destroy());
+    this.charts = [];
+  }
+
+  groupUsersByEnterprise(users: User[]): Map<string, User[]> {
+    return users.reduce((map, user) => {
+      if (!map.has(user.enterprise)) {
+        map.set(user.enterprise, []);
+      }
+      map.get(user.enterprise)?.push(user);
+      return map;
+    }, new Map<string, User[]>());
+  }
+
+  getChartData(users: User[]): { labels: string[], datasets: { label: string, data: number[], backgroundColor: string[], hoverOffset: number }[] } {
+    const userPercentages = users.map(user => user.participation);
+    const userLabels = users.map(user => user.firstName);
+
+    return {
+      labels: userLabels,
+      datasets: [{
+        label: 'User Percentages',
+        data: userPercentages,
+        backgroundColor: this.generateColors(userPercentages.length),
+        hoverOffset: 4
+      }],
+    };
   }
 
   generateColors(count: number): string[] {
     const colors = [];
     for (let i = 0; i < count; i++) {
-      colors.push(this.getRandomColor()); // generate a random color for each user
+      colors.push(this.getRandomColor());
     }
     return colors;
   }
@@ -122,5 +149,4 @@ export class UserComponent implements OnInit {
     }
     return color;
   }
-
 }
