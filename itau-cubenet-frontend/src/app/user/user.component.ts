@@ -3,6 +3,7 @@ import { NgFor } from '@angular/common';
 import { User } from '../models/user';
 import { FormsModule } from '@angular/forms';
 import { UserService } from '../service/user.service';
+import { Chart } from 'chart.js/auto';
 
 @Component({
   selector: 'app-user',
@@ -18,10 +19,13 @@ export class UserComponent implements OnInit {
   selectedUser: User = {} as User;
   isUpdateModalOpen = false;
 
+  public chart: any;
+
   constructor(private userService: UserService) { }
 
   ngOnInit(): void {
     this.getUsers();
+    this.createChart();
   }
 
   getUsers(): void {
@@ -35,6 +39,7 @@ export class UserComponent implements OnInit {
           console.log('User added:', user);
           this.getUsers();
           this.user = {} as User;  // Clear the form fields
+          this.createChart();
         },
         error: (err) => {
           console.error('Error adding user:', err);
@@ -47,6 +52,7 @@ export class UserComponent implements OnInit {
       next: () => {
         console.log('User deleted successfully!');
         this.getUsers(); // Refresh the user list
+        this.createChart();
       },
       error: (err) => {
         console.error('Error deleting user:', err);
@@ -70,11 +76,51 @@ export class UserComponent implements OnInit {
         console.log('User updated:', user);
         this.getUsers();
         this.closeUpdateModal();
+        this.createChart();
       },
       error: (err) => {
         console.error('Error updating user:', err);
       }
     });
+  }
+
+
+  createChart() {
+    const userPercentages = this.users.map(user => user.participation); // calculate percentages
+    const userLabels = this.users.map(user => user.firstName); // get user names for labels
+
+    this.chart = new Chart("MyChart", {
+      type: 'doughnut',
+      data: {
+        labels: userLabels,
+        datasets: [{
+          label: 'User Percentages',
+          data: userPercentages,
+          backgroundColor: this.generateColors(userPercentages.length), // generate colors
+          hoverOffset: 4
+        }],
+      },
+      options: {
+        aspectRatio: 2.5
+      }
+    });
+  }
+
+  generateColors(count: number): string[] {
+    const colors = [];
+    for (let i = 0; i < count; i++) {
+      colors.push(this.getRandomColor()); // generate a random color for each user
+    }
+    return colors;
+  }
+
+  getRandomColor(): string {
+    const letters = '0123456789ABCDEF';
+    let color = '#';
+    for (let i = 0; i < 6; i++) {
+      color += letters[Math.floor(Math.random() * 16)];
+    }
+    return color;
   }
 
 }
